@@ -1,6 +1,74 @@
+import {
+	FacebookAuthProvider,
+	getAuth,
+	GoogleAuthProvider,
+	signInWithPopup,
+} from "firebase/auth";
+
+import { useContext, useRef, useState } from "react";
 import { Link } from "react-router-dom";
+import api from "../config/api.json";
+import AuthContext from "../store/AuthContext";
 
 function Login() {
+	const [message, setMessage] = useState("");
+	const authContext = useContext(AuthContext);
+	const emailRef = useRef();
+	const passwordRef = useRef();
+
+	const signInWithPassword = () => {
+		const user = {
+			email: emailRef.current.value,
+			password: passwordRef.current.value,
+			returnSecureToken: true,
+		};
+
+		fetch(api.signInWithPasswordApiUrl, {
+			method: "POST",
+			body: JSON.stringify(user),
+			headers: {
+				"Content-Type": "application/json",
+			},
+		})
+			.then((res) => res.json())
+			.then((json) => {
+				if (json.idToken !== undefined) {
+					authContext.login(json.idToken);
+				} else if (json.error !== undefined) {
+					setMessage(json.error.message);
+				}
+			});
+	};
+
+	const continueWithFacebook = () => {
+		const provider = new FacebookAuthProvider();
+		const auth = getAuth();
+		signInWithPopup(auth, provider)
+			.then((result) => {
+				const credential = FacebookAuthProvider.credentialFromResult(result);
+				const token = credential.accessToken;
+				authContext.login(token);
+			})
+			.catch((error) => {
+				setMessage(error.message);
+			});
+	};
+
+	const continueWithGoogle = () => {
+		const provider = new GoogleAuthProvider();
+
+		const auth = getAuth();
+		signInWithPopup(auth, provider)
+			.then((result) => {
+				const credential = GoogleAuthProvider.credentialFromResult(result);
+				const token = credential.accessToken;
+				authContext.login(token);
+			})
+			.catch((error) => {
+				setMessage(error.message);
+			});
+	};
+
 	return (
 		<div>
 			<div className=" px-6 py-12 ">
@@ -13,6 +81,29 @@ function Login() {
 						/>
 					</div>
 					<div className="w-full md:w-8/12 lg:w-5/12 lg:ml-20">
+						{message !== "" && (
+							<div className="mb-6">
+								<div
+									className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative"
+									role="alert"
+								>
+									<strong className="font-bold">Authentication failed!</strong>
+									<span className="block sm:inline"> {message}</span>
+									<span className="absolute top-0 bottom-0 right-0 px-4 py-3">
+										<svg
+											onClick={() => setMessage("")}
+											className="fill-current h-6 w-6 text-red-500"
+											role="button"
+											xmlns="http://www.w3.org/2000/svg"
+											viewBox="0 0 20 20"
+										>
+											<title>Close</title>
+											<path d="M14.348 14.849a1.2 1.2 0 0 1-1.697 0L10 11.819l-2.651 3.029a1.2 1.2 0 1 1-1.697-1.697l2.758-3.15-2.759-3.152a1.2 1.2 0 1 1 1.697-1.697L10 8.183l2.651-3.031a1.2 1.2 0 1 1 1.697 1.697l-2.758 3.152 2.758 3.15a1.2 1.2 0 0 1 0 1.698z" />
+										</svg>
+									</span>
+								</div>
+							</div>
+						)}
 						<div className="mb-6">
 							<label
 								className="form-check-label inline-block text-gray-800 dark:text-white"
@@ -22,6 +113,7 @@ function Login() {
 							</label>
 							<input
 								type="text"
+								ref={emailRef}
 								className="form-control block w-full px-4 py-2 text-md font-normal text-gray-700 bg-white bg-clip-padding border border-solid border-gray-300 rounded transition ease-in-out m-0 focus:text-gray-700 focus:bg-white focus:border-blue-600 focus:outline-none"
 								placeholder="Your email"
 							/>
@@ -36,7 +128,8 @@ function Login() {
 							</label>
 							<input
 								type="password"
-								className="form-control block w-full px-4 py-2 text-md font-normal text-gray-700 bg-white bg-clip-padding border border-solid border-gray-300 rounded transition ease-in-out m-0 focus:text-gray-700 focus:bg-white focus:border-blue-600 focus:outline-none"
+								ref={passwordRef}
+								className="form-control block w-full px-4 py-2 mb-1 text-md font-normal text-gray-700 bg-white bg-clip-padding border border-solid border-gray-300 rounded transition ease-in-out m-0 focus:text-gray-700 focus:bg-white focus:border-blue-600 focus:outline-none"
 								placeholder="Your password"
 							/>
 						</div>
@@ -63,7 +156,10 @@ function Login() {
 							</Link>
 						</div>
 
-						<button className="inline-block px-7 py-3 bg-blue-600 text-white font-medium text-sm leading-snug uppercase rounded shadow-md hover:bg-blue-700 hover:shadow-lg focus:bg-blue-700 focus:shadow-lg focus:outline-none focus:ring-0 active:bg-blue-800 active:shadow-lg transition duration-150 ease-in-out w-full">
+						<button
+							onClick={signInWithPassword}
+							className="inline-block px-7 py-3 bg-blue-600 text-white font-medium text-sm leading-snug uppercase rounded shadow-md hover:bg-blue-700 hover:shadow-lg focus:bg-blue-700 focus:shadow-lg focus:outline-none focus:ring-0 active:bg-blue-800 active:shadow-lg transition duration-150 ease-in-out w-full"
+						>
 							Sign in
 						</button>
 
@@ -71,7 +167,10 @@ function Login() {
 							<p className="text-center font-semibold mx-4 mb-0">OR</p>
 						</div>
 
-						<button className="px-7 py-3 bg-[#3b5998] text-white font-medium text-sm leading-snug uppercase rounded shadow-md hover:shadow-lg focus:shadow-lg focus:outline-none focus:ring-0 active:shadow-lg transition duration-150 ease-in-out w-full flex justify-center items-center mb-3">
+						<button
+							onClick={continueWithFacebook}
+							className="px-7 py-3 bg-[#3b5998] text-white font-medium text-sm leading-snug uppercase rounded shadow-md hover:shadow-lg focus:shadow-lg focus:outline-none focus:ring-0 active:shadow-lg transition duration-150 ease-in-out w-full flex justify-center items-center mb-3"
+						>
 							<svg
 								xmlns="http://www.w3.org/2000/svg"
 								viewBox="0 0 320 512"
@@ -84,7 +183,10 @@ function Login() {
 							</svg>
 							Continue with Facebook
 						</button>
-						<button className="px-7 py-3 bg-[#1a6ef5] text-white font-medium text-sm leading-snug uppercase rounded shadow-md hover:shadow-lg focus:shadow-lg focus:outline-none focus:ring-0 active:shadow-lg transition duration-150 ease-in-out w-full flex justify-center items-center">
+						<button
+							onClick={continueWithGoogle}
+							className="px-7 py-3 bg-[#1a6ef5] text-white font-medium text-sm leading-snug uppercase rounded shadow-md hover:shadow-lg focus:shadow-lg focus:outline-none focus:ring-0 active:shadow-lg transition duration-150 ease-in-out w-full flex justify-center items-center"
+						>
 							<svg
 								viewBox="0 0 48 48"
 								width="16"

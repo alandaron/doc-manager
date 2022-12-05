@@ -1,4 +1,4 @@
 {
     "signUpApiUrl": "https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=AIzaSyCE7u2HKxGNudOnCU3FdyUkYLx2AwX4lxw",
-    "signInApiUrl": "https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=AIzaSyCE7u2HKxGNudOnCU3FdyUkYLx2AwX4lxw"
+    "signInWithPasswordApiUrl": "https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=AIzaSyCE7u2HKxGNudOnCU3FdyUkYLx2AwX4lxw"
 }

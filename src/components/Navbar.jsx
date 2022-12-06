@@ -1,9 +1,13 @@
-import { useContext, useEffect, useState } from "react";
+import { useContext, useEffect, useRef, useState } from "react";
 import { Link, NavLink } from "react-router-dom";
 import AuthContext from "../store/AuthContext";
 
 function Navbar() {
 	const authContext = useContext(AuthContext);
+	const [userDropdownOpen, setUserDropdownOpen] = useState(false);
+	// const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+
+	const userDropdownButtonRef = useRef();
 
 	const links = [
 		{
@@ -43,6 +47,20 @@ function Navbar() {
 		}
 	}, []);
 
+	useEffect(() => {
+		const closeUserDropdown = (e) => {
+			if (e.path[0] !== userDropdownButtonRef.current) {
+				setUserDropdownOpen(false);
+			}
+		};
+
+		document.body.addEventListener("click", closeUserDropdown);
+
+		return () => {
+			document.body.removeEventListener("click", closeUserDropdown);
+		};
+	}, []);
+
 	const [darkTheme, setDarkTheme] = useState(false);
 
 	const changeDarkTheme = () => {
@@ -67,10 +85,67 @@ function Navbar() {
 						</span>
 					</Link>
 
-					<div className="order-1">
+					<div className="flex items-center md:order-2">
+						<div className="relative inline-block">
+							{authContext.loggedIn && (
+								<button
+									className="flex mr-3 text-sm bg-gray-800 rounded-full md:mr-0 focus:ring-4 focus:ring-gray-300 dark:focus:ring-gray-600"
+									onClick={() => setUserDropdownOpen((open) => !open)}
+								>
+									<img
+										ref={userDropdownButtonRef}
+										className="w-8 h-8 rounded-full"
+										src={
+											authContext.user.photoUrl
+												? authContext.user.photoUrl
+												: "https://cdn.pixabay.com/photo/2016/08/08/09/17/avatar-1577909_960_720.png"
+										}
+										alt="user"
+									/>
+								</button>
+							)}
+
+							{userDropdownOpen === true && (
+								<div className="absolute origin-top-right right-0 z-50 my-4 text-base list-none bg-white divide-y divide-gray-100 rounded shadow dark:bg-gray-700 dark:divide-gray-600">
+									<div className="px-4 py-3">
+										<span className="block text-sm text-gray-900 dark:text-white">
+											{authContext.user.displayName}
+										</span>
+										<span className="block text-sm font-medium text-gray-500 truncate dark:text-gray-400">
+											{authContext.user.email}
+										</span>
+									</div>
+									<ul className="py-1" aria-labelledby="user-menu-button">
+										<li>
+											<Link
+												to="/dashboard"
+												className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white"
+											>
+												Dashboard
+											</Link>
+										</li>
+										<li>
+											<Link
+												to="/settings"
+												className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white"
+											>
+												Settings
+											</Link>
+										</li>
+										<li>
+											<Link
+												className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white"
+												onClick={() => authContext.logout()}
+											>
+												Sign out
+											</Link>
+										</li>
+									</ul>
+								</div>
+							)}
+						</div>
 						<button
-							type="button"
-							className="inline-flex text-gray-500 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700 focus:outline-none focus:ring-4 focus:ring-gray-200 dark:focus:ring-gray-700 rounded-lg text-sm p-2.5"
+							className="inline-flex text-gray-500 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700 focus:outline-none focus:ring-4 focus:ring-gray-200 dark:focus:ring-gray-700 rounded-lg text-sm p-2.5 ml-3"
 							onClick={changeDarkTheme}
 						>
 							<svg
@@ -94,12 +169,7 @@ function Navbar() {
 								></path>
 							</svg>
 						</button>
-						<button
-							type="button"
-							data-collapse-toggle="mobile-menu"
-							className="inline-flex text-gray-500 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700 focus:outline-none focus:ring-4 focus:ring-gray-200 dark:focus:ring-gray-700 rounded-lg text-sm p-2.5 ml-3 md:hidden"
-						>
-							<span className="sr-only">Open main menu</span>
+						<button className="inline-flex text-gray-500 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700 focus:outline-none focus:ring-4 focus:ring-gray-200 dark:focus:ring-gray-700 rounded-lg text-sm p-2.5 ml-3 md:hidden">
 							<svg
 								className="w-6 h-6"
 								aria-hidden="true"

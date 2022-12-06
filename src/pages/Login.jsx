@@ -33,7 +33,7 @@ function Login() {
 			.then((res) => res.json())
 			.then((json) => {
 				if (json.idToken !== undefined) {
-					authContext.login(json.idToken);
+					authContext.login(json.idToken, json);
 				} else if (json.error !== undefined) {
 					setMessage(json.error.message);
 				}
@@ -45,9 +45,7 @@ function Login() {
 		const auth = getAuth();
 		signInWithPopup(auth, provider)
 			.then((result) => {
-				const credential = FacebookAuthProvider.credentialFromResult(result);
-				const token = credential.accessToken;
-				authContext.login(token);
+				authContext.login(result.user.accessToken, result.user);
 			})
 			.catch((error) => {
 				setMessage(error.message);
@@ -60,9 +58,7 @@ function Login() {
 		const auth = getAuth();
 		signInWithPopup(auth, provider)
 			.then((result) => {
-				const credential = GoogleAuthProvider.credentialFromResult(result);
-				const token = credential.accessToken;
-				authContext.login(token);
+				authContext.login(result.user.accessToken, result.user);
 			})
 			.catch((error) => {
 				setMessage(error.message);

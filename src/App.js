@@ -2,6 +2,7 @@ import { initializeApp } from "firebase/app";
 import { useContext } from "react";
 import { Navigate, Route, Routes } from "react-router-dom";
 import Navbar from "./components/Navbar";
+import Create from "./pages/Create";
 import Dashboard from "./pages/Dashboard";
 import Home from "./pages/Home";
 import Login from "./pages/Login";
@@ -40,6 +41,7 @@ function App() {
 					{authContext.loggedIn && (
 						<>
 							<Route path="dashboard" element={<Dashboard />} />
+							<Route path="dashboard/create" element={<Create />} />
 							<Route path="login" element={<Navigate to="/dashboard" />} />
 						</>
 					)}

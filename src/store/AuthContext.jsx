@@ -17,11 +17,16 @@ export const AuthContextProvider = (props) => {
 			headers: {
 				"Content-Type": "application/json",
 			},
-		})
-			.then((res) => res.json())
-			.then((json) => {
+		}).then((res) => {
+			if (!res.ok) {
+				// Lookup ebaõnnestus, ilmselt token'iga probleeme.
+				return setIsLoggedIn(false);
+			}
+
+			res.json().then((json) => {
 				setUser(json.users[0]);
 			});
+		});
 	}, [isLoggedIn]);
 
 	const loginHandler = (idToken, user) => {

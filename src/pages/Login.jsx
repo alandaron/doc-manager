@@ -16,7 +16,9 @@ function Login() {
 	const emailRef = useRef();
 	const passwordRef = useRef();
 
-	const signInWithPassword = () => {
+	const signInWithPassword = (e) => {
+		e.preventDefault();
+
 		const user = {
 			email: emailRef.current.value,
 			password: passwordRef.current.value,
@@ -77,6 +79,27 @@ function Login() {
 						/>
 					</div>
 					<div className="w-full md:w-8/12 lg:w-5/12 lg:ml-20">
+						<div
+							class="bg-blue-100 border-t-4 border-blue-500 rounded-b text-blue-900 px-4 py-3 shadow-md mb-6"
+							role="alert"
+						>
+							<div class="flex">
+								<div class="py-1">
+									<svg
+										class="fill-current h-6 w-6 text-blue-500 mr-4"
+										xmlns="http://www.w3.org/2000/svg"
+										viewBox="0 0 20 20"
+									>
+										<path d="M2.93 17.07A10 10 0 1 1 17.07 2.93 10 10 0 0 1 2.93 17.07zm12.73-1.41A8 8 0 1 0 4.34 4.34a8 8 0 0 0 11.32 11.32zM9 11V9h2v6H9v-4zm0-6h2v2H9V5z" />
+									</svg>
+								</div>
+								<div>
+									<p class="font-bold">Login info</p>
+									<p class="text-sm">demo@user.ee</p>
+									<p class="text-sm">pass123</p>
+								</div>
+							</div>
+						</div>
 						{message !== "" && (
 							<div className="mb-6">
 								<div
@@ -100,62 +123,62 @@ function Login() {
 								</div>
 							</div>
 						)}
-						<div className="mb-6">
-							<label
-								className="form-check-label inline-block text-gray-800 dark:text-white"
-								htmlFor="rememberMeCheck"
-							>
-								Email
-							</label>
-							<input
-								type="text"
-								ref={emailRef}
-								className="form-control block w-full px-4 py-2 text-md font-normal text-gray-700 bg-white bg-clip-padding border border-solid border-gray-300 rounded transition ease-in-out m-0 focus:text-gray-700 focus:bg-white focus:border-blue-600 focus:outline-none"
-								placeholder="Your email"
-							/>
-						</div>
 
-						<div className="mb-6">
-							<label
-								className="form-check-label inline-block text-gray-800 dark:text-white"
-								htmlFor="rememberMeCheck"
-							>
-								Password
-							</label>
-							<input
-								type="password"
-								ref={passwordRef}
-								className="form-control block w-full px-4 py-2 mb-1 text-md font-normal text-gray-700 bg-white bg-clip-padding border border-solid border-gray-300 rounded transition ease-in-out m-0 focus:text-gray-700 focus:bg-white focus:border-blue-600 focus:outline-none"
-								placeholder="Your password"
-							/>
-						</div>
-
-						<div className="flex justify-between items-center mb-6">
-							<div className="form-group form-check">
-								<input
-									type="checkbox"
-									id="rememberMeCheck"
-									className="form-check-input h-4 w-4 border border-gray-300 rounded-sm bg-white checked:bg-blue-600 checked:border-blue-600 focus:outline-none transition duration-200 mt-1 align-top bg-no-repeat bg-center bg-contain float-left mr-2 cursor-pointer"
-								/>
+						<form onSubmit={signInWithPassword}>
+							<div className="mb-6">
 								<label
 									className="form-check-label inline-block text-gray-800 dark:text-white"
 									htmlFor="rememberMeCheck"
 								>
-									Remember me
+									Email
 								</label>
+								<input
+									type="text"
+									ref={emailRef}
+									className="form-control block w-full px-4 py-2 text-md font-normal text-gray-700 bg-white bg-clip-padding border border-solid border-gray-300 rounded transition ease-in-out m-0 focus:text-gray-700 focus:bg-white focus:border-blue-600 focus:outline-none"
+									placeholder="Your email"
+								/>
 							</div>
-							<Link
-								to="/forgot-password"
-								className="text-blue-600 hover:text-blue-700 focus:text-blue-700 active:text-blue-800 duration-200 transition ease-in-out"
-							>
-								Forgot password?
-							</Link>
-						</div>
 
-						<button onClick={signInWithPassword} className="button w-full">
-							Sign in
-						</button>
+							<div className="mb-6">
+								<label
+									className="form-check-label inline-block text-gray-800 dark:text-white"
+									htmlFor="rememberMeCheck"
+								>
+									Password
+								</label>
+								<input
+									type="password"
+									ref={passwordRef}
+									className="form-control block w-full px-4 py-2 mb-1 text-md font-normal text-gray-700 bg-white bg-clip-padding border border-solid border-gray-300 rounded transition ease-in-out m-0 focus:text-gray-700 focus:bg-white focus:border-blue-600 focus:outline-none"
+									placeholder="Your password"
+								/>
+							</div>
 
+							<div className="flex justify-between items-center mb-6">
+								<div className="form-group form-check">
+									<input
+										type="checkbox"
+										id="rememberMeCheck"
+										className="form-check-input h-4 w-4 border border-gray-300 rounded-sm bg-white checked:bg-blue-600 checked:border-blue-600 focus:outline-none transition duration-200 mt-1 align-top bg-no-repeat bg-center bg-contain float-left mr-2 cursor-pointer"
+									/>
+									<label
+										className="form-check-label inline-block text-gray-800 dark:text-white"
+										htmlFor="rememberMeCheck"
+									>
+										Remember me
+									</label>
+								</div>
+								<Link
+									to="/forgot-password"
+									className="text-blue-600 hover:text-blue-700 focus:text-blue-700 active:text-blue-800 duration-200 transition ease-in-out"
+								>
+									Forgot password?
+								</Link>
+							</div>
+
+							<button className="button w-full">Sign in</button>
+						</form>
 						<div className="flex items-center my-4 before:flex-1 before:border-t before:border-gray-300 before:mt-0.5 after:flex-1 after:border-t after:border-gray-300 after:mt-0.5">
 							<p className="text-center font-semibold mx-4 mb-0">OR</p>
 						</div>

@@ -25,7 +25,7 @@ function App() {
 	const authContext = useContext(AuthContext);
 
 	return (
-		<div className="h-screen bg-white text-gray-800 dark:text-white dark:bg-gray-900">
+		<div className=" bg-white text-gray-800 dark:text-white dark:bg-gray-900">
 			<div className="md:container mx-auto md:py-2">
 				<Navbar />
 
@@ -34,7 +34,7 @@ function App() {
 					{!authContext.loggedIn && (
 						<>
 							<Route path="login" element={<Login />} />
-							<Route path="dashboard" element={<Navigate to="/login" />} />
+							<Route path="dashboard/*" element={<Navigate to="/login" />} />
 						</>
 					)}
 

@@ -1,5 +1,6 @@
 {
     "signUpApiUrl": "https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=AIzaSyCE7u2HKxGNudOnCU3FdyUkYLx2AwX4lxw",
     "signInWithPasswordApiUrl": "https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=AIzaSyCE7u2HKxGNudOnCU3FdyUkYLx2AwX4lxw",
-    "lookUpApiUrl": "https://identitytoolkit.googleapis.com/v1/accounts:lookup?key=AIzaSyCE7u2HKxGNudOnCU3FdyUkYLx2AwX4lxw"
+    "lookUpApiUrl": "https://identitytoolkit.googleapis.com/v1/accounts:lookup?key=AIzaSyCE7u2HKxGNudOnCU3FdyUkYLx2AwX4lxw",
+    "flatsApiUrl": "https://doc-manager-aron-default-rtdb.europe-west1.firebasedatabase.app/flats/"
 }

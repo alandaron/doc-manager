@@ -5,15 +5,15 @@ const AuthContext = createContext(null);
 export const AuthContextProvider = (props) => {
 	const [user, setUser] = useState({});
 	const [isLoggedIn, setIsLoggedIn] = useState(
-		sessionStorage.getItem("token") !== null
+		sessionStorage.getItem("user") !== null
 	);
 
 	useEffect(() => {
 		if (!isLoggedIn) return;
-
+		const user = JSON.parse(sessionStorage.getItem("user")) || [];
 		fetch(api.lookUpApiUrl, {
 			method: "POST",
-			body: JSON.stringify({ idToken: sessionStorage.getItem("token") }),
+			body: JSON.stringify({ idToken: user.token }),
 			headers: {
 				"Content-Type": "application/json",
 			},
@@ -32,13 +32,18 @@ export const AuthContextProvider = (props) => {
 	const loginHandler = (idToken, user) => {
 		setIsLoggedIn(true);
 		setUser(user);
-		sessionStorage.setItem("token", idToken);
+
+		const userLS = {
+			uid: user.reloadUserInfo?.localId || user.localId,
+			token: idToken,
+		};
+		sessionStorage.setItem("user", JSON.stringify(userLS));
 	};
 
 	const logoutHandler = () => {
 		setIsLoggedIn(false);
 		setUser({});
-		sessionStorage.removeItem("token");
+		sessionStorage.removeItem("user");
 	};
 
 	return (

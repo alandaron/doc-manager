@@ -80,13 +80,13 @@ function Login() {
 					</div>
 					<div className="w-full md:w-8/12 lg:w-5/12 lg:ml-20">
 						<div
-							class="bg-blue-100 border-t-4 border-blue-500 rounded-b text-blue-900 px-4 py-3 shadow-md mb-6"
+							className="bg-blue-100 border-t-4 border-blue-500 rounded-b text-blue-900 px-4 py-3 shadow-md mb-6"
 							role="alert"
 						>
-							<div class="flex">
-								<div class="py-1">
+							<div className="flex">
+								<div className="py-1">
 									<svg
-										class="fill-current h-6 w-6 text-blue-500 mr-4"
+										className="fill-current h-6 w-6 text-blue-500 mr-4"
 										xmlns="http://www.w3.org/2000/svg"
 										viewBox="0 0 20 20"
 									>
@@ -94,9 +94,9 @@ function Login() {
 									</svg>
 								</div>
 								<div>
-									<p class="font-bold">Login info</p>
-									<p class="text-sm">demo@user.ee</p>
-									<p class="text-sm">pass123</p>
+									<p className="font-bold">Login info</p>
+									<p className="text-sm">demo@user.ee</p>
+									<p className="text-sm">pass123</p>
 								</div>
 							</div>
 						</div>

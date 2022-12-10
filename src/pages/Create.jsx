@@ -1,78 +1,31 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import api from "../config/api.json";
 
 function Create() {
-	const [flats, setFlats] = useState([
-		{
-			id: 0,
-			name: "Korter 1",
-			owner: "Kirstjan Jõekalda",
-			lastWater: 123,
-			newWater: undefined,
-		},
-		{
-			id: 1,
-			name: "Korter 2",
-			owner: "Kirstjan Jõekalda",
-
-			lastWater: 224,
-			newWater: undefined,
-		},
-		{
-			id: 2,
-			name: "Korter 3",
-			owner: "Kirstjan Jõekalda",
-
-			lastWater: 39,
-			newWater: undefined,
-		},
-		{
-			id: 3,
-			name: "Korter 4",
-			owner: "Kirstjan Jõekalda",
-
-			lastWater: 5,
-			newWater: undefined,
-		},
-		{
-			id: 4,
-			name: "Korter 5",
-			owner: "Kirstjan Jõekalda",
-
-			lastWater: 5,
-			newWater: undefined,
-		},
-		{
-			id: 5,
-			name: "Korter 6",
-			owner: "Kirstjan Jõekalda",
-
-			lastWater: 5,
-			newWater: undefined,
-		},
-		{
-			id: 6,
-			name: "Korter 7",
-			owner: "Kirstjan Jõekalda",
-
-			lastWater: 5,
-			newWater: undefined,
-		},
-		{
-			id: 7,
-			name: "Korter 8",
-			owner: "Kirstjan Jõekalda",
-
-			lastWater: 5,
-			newWater: undefined,
-		},
-	]);
+	const [flats, setFlats] = useState([]);
 
 	const [addedItems, setAddedItems] = useState([]);
 	const [lastID, setLastID] = useState(0);
 
+	useEffect(() => {
+		const user = JSON.parse(sessionStorage.getItem("user")) || [];
+
+		const fetchHeaders = {
+			"Content-Type": "application/json",
+		};
+
+		fetch(api.flatsApiUrl + user.uid + ".json?auth=" + user.token, {
+			headers: fetchHeaders,
+		})
+			.then((res) => res.json())
+			.then((json) => {
+				setFlats(json || []);
+			});
+	}, []);
+
 	const changeNewWater = (id, newWater) => {
 		const index = flats.findIndex((e) => e.id === id);
-		flats[index].newWater = newWater;
+		flats[index].newWater = Number(newWater);
 		setFlats([...flats]);
 	};
 
@@ -109,7 +62,7 @@ function Create() {
 
 	const changeValue = (id, newValue) => {
 		const index = addedItems.findIndex((e) => e.id === id);
-		addedItems[index].value = newValue;
+		addedItems[index].value = Number(newValue);
 		setAddedItems([...addedItems]);
 	};
 
@@ -123,7 +76,7 @@ function Create() {
 		<div>
 			<div className="flex w-full">
 				<div className="flex-1 border rounded-lg px-2 mx-2">
-					<div className="text-xl p-2 text-center">Korterid</div>
+					<div className="text-xl p-2 text-center">Korterite veenäidud</div>
 					<div className="h-[26rem] overflow-y-scroll mb-2 px-1">
 						{flats.map((flat) => (
 							<div
@@ -134,20 +87,20 @@ function Create() {
 									<span className="text-gray-900 text-xl leading-tight font-medium">
 										{flat.name}
 									</span>
-									<span className="text-gray-700 text-sm ml-1">
+									<span className="text-gray-700 text-sm ml-1 w-28">
 										{flat.owner}
 									</span>
-									<span className="text-gray-700 text-base ml-4">
+								</div>
+								<div className="w-[60%]">
+									<span className="text-gray-700 text-base mr-5">
 										Viimane näit: {flat.lastWater}
 									</span>
-								</div>
-								<div className="w-64">
 									<span className="text-gray-700 text-base ml-4">
 										Uus näit:
 										<input
 											placeholder="0000"
 											type="number"
-											className="text-gray-700 text-base w-24 ml-1"
+											className="text-gray-700 text-base w-20 ml-1"
 											value={flat.newWater}
 											onChange={(e) => changeNewWater(flat.id, e.target.value)}
 										/>
@@ -165,7 +118,7 @@ function Create() {
 					</div>
 				</div>
 				<div className="flex-1 border rounded-lg px-2 mx-2">
-					<div className="text-xl p-2 text-center">Lisad</div>
+					<div className="text-xl p-2 text-center">Teenused</div>
 
 					{addedItems.length > 0 && (
 						<div className="h-[26rem] overflow-y-scroll mb-2 px-1">
@@ -266,11 +219,14 @@ function Create() {
 					<div className="text-xl p-2 text-center">Kokkuvõte</div>
 					<div className="grid grid-cols-4 gap-3 p-3">
 						{flats.map((flat) => (
-							<div class="block p-6 rounded-lg shadow-lg bg-white max-w-sm">
-								<h5 class="text-gray-900 text-xl leading-tight font-medium mb-2">
+							<div
+								key={flat.id}
+								className="block p-6 rounded-lg shadow-lg bg-white max-w-sm"
+							>
+								<h5 className="text-gray-900 text-xl leading-tight font-medium mb-2">
 									{flat.name} ({flat.owner})
 								</h5>
-								<p class="text-gray-700 text-base mb-1">
+								<p className="text-gray-700 text-base mb-1">
 									{flat.newWater > flat.lastWater ? (
 										<>Vesi: {(flat.newWater - flat.lastWater).toFixed(1)} m³</>
 									) : (
@@ -282,11 +238,11 @@ function Create() {
 									.filter((item) => item.active === true)
 									.map((item) =>
 										item.share ? (
-											<p class="text-gray-700 text-base mb-1">
+											<p key={item.id} className="text-gray-700 text-base mb-1">
 												{item.title}: {(item.value / flats.length).toFixed(2)} €
 											</p>
 										) : (
-											<p class="text-gray-700 text-base mb-1">
+											<p key={item.id} className="text-gray-700 text-base mb-1">
 												{item.title}: {item.value} €
 											</p>
 										)
@@ -294,7 +250,7 @@ function Create() {
 
 								<button
 									type="button"
-									class=" inline-block px-6 py-2.5 bg-blue-600 text-white font-medium text-xs leading-tight uppercase rounded shadow-md hover:bg-blue-700 hover:shadow-lg focus:bg-blue-700 focus:shadow-lg focus:outline-none focus:ring-0 active:bg-blue-800 active:shadow-lg transition duration-150 ease-in-out"
+									className=" inline-block px-6 py-2.5 bg-blue-600 text-white font-medium text-xs leading-tight uppercase rounded shadow-md hover:bg-blue-700 hover:shadow-lg focus:bg-blue-700 focus:shadow-lg focus:outline-none focus:ring-0 active:bg-blue-800 active:shadow-lg transition duration-150 ease-in-out"
 								>
 									Button
 								</button>

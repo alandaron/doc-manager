@@ -4,6 +4,7 @@ import { Navigate, Route, Routes } from "react-router-dom";
 import Navbar from "./components/Navbar";
 import Create from "./pages/Create";
 import Dashboard from "./pages/Dashboard";
+import Flats from "./pages/Flats";
 import Home from "./pages/Home";
 import Login from "./pages/Login";
 import AuthContext from "./store/AuthContext";
@@ -25,7 +26,7 @@ function App() {
 	const authContext = useContext(AuthContext);
 
 	return (
-		<div className=" bg-white text-gray-800 dark:text-white dark:bg-gray-900">
+		<div className="bg-white text-gray-800 dark:text-white dark:bg-gray-900">
 			<div className="md:container mx-auto md:py-2">
 				<Navbar />
 
@@ -42,6 +43,7 @@ function App() {
 						<>
 							<Route path="dashboard" element={<Dashboard />} />
 							<Route path="dashboard/create" element={<Create />} />
+							<Route path="dashboard/flats" element={<Flats />} />
 							<Route path="login" element={<Navigate to="/dashboard" />} />
 						</>
 					)}

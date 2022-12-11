@@ -1,26 +1,28 @@
 import { useEffect, useState } from "react";
-import api from "../config/api.json";
+import api from "../config/api";
 
 function Create() {
 	const [flats, setFlats] = useState([]);
+	const [water, setWater] = useState(0);
 
 	const [addedItems, setAddedItems] = useState([]);
-	const [lastID, setLastID] = useState(0);
+	const [months, setMonths] = useState([]);
 
 	useEffect(() => {
 		const user = JSON.parse(sessionStorage.getItem("user")) || [];
 
-		const fetchHeaders = {
-			"Content-Type": "application/json",
-		};
+		api.get("flats", user).then((res) => {
+			setFlats(res.data || []);
+		});
 
-		fetch(api.flatsApiUrl + user.uid + ".json?auth=" + user.token, {
-			headers: fetchHeaders,
-		})
-			.then((res) => res.json())
-			.then((json) => {
-				setFlats(json || []);
-			});
+		api.get("settings", user).then((res) => {
+			setWater(res.data.water || []);
+			setAddedItems(res.data.items || []);
+		});
+
+		api.get("months", user).then((res) => {
+			setMonths(res.data || []);
+		});
 	}, []);
 
 	const changeNewWater = (id, newWater) => {
@@ -30,9 +32,8 @@ function Create() {
 	};
 
 	const addItem = () => {
-		setLastID((prev) => prev + 1);
 		const newItem = {
-			id: lastID,
+			id: Math.random() * 9999,
 			active: true,
 			title: "",
 			value: "",
@@ -72,6 +73,27 @@ function Create() {
 		setAddedItems([...addedItems]);
 	};
 
+	const save = () => {
+		const user = JSON.parse(sessionStorage.getItem("user")) || [];
+
+		const newFlats = flats.map((flat) => {
+			return { ...flat, lastWater: flat.newWater, newWater: "" };
+		});
+
+		api.put("flats", newFlats, user).then((res) => console.log("FLATS OK!"));
+
+		const month = {
+			flats: flats,
+			items: addedItems,
+			year: new Date().getFullYear(),
+			month: new Date().getMonth(),
+		};
+
+		months.push(month);
+
+		api.put("months", months, user).then((res) => console.log("OK!"));
+	};
+
 	return (
 		<div>
 			<div className="flex w-full">
@@ -93,7 +115,14 @@ function Create() {
 								</div>
 								<div className="w-[60%]">
 									<span className="text-gray-700 text-base mr-5">
-										Viimane näit: {flat.lastWater}
+										Viimane näit:
+										<input
+											placeholder="0000"
+											type="number"
+											className="text-gray-700 text-base w-10 ml-1"
+											value={flat.lastWater}
+											readOnly={true}
+										/>
 									</span>
 									<span className="text-gray-700 text-base ml-4">
 										Uus näit:
@@ -164,6 +193,7 @@ function Create() {
 											disabled={!item.active}
 											className="hover:cursor-pointer w-4 h-4"
 											onChange={(e) => changeShare(item.id, e.target.checked)}
+											checked={item.share}
 										/>
 										<label
 											htmlFor={"share" + item.id}
@@ -226,13 +256,20 @@ function Create() {
 								<h5 className="text-gray-900 text-xl leading-tight font-medium mb-2">
 									{flat.name} ({flat.owner})
 								</h5>
-								<p className="text-gray-700 text-base mb-1">
-									{flat.newWater > flat.lastWater ? (
-										<>Vesi: {(flat.newWater - flat.lastWater).toFixed(1)} m³</>
-									) : (
-										<>Vesi: 0 m³</>
-									)}
-								</p>
+
+								{flat.newWater > flat.lastWater ? (
+									<p className="text-gray-700 text-base mb-1">
+										<span>Vesi: </span>
+										<span>
+											{(flat.newWater - flat.lastWater).toFixed(1) * water} €{" "}
+										</span>
+										<span>
+											({(flat.newWater - flat.lastWater).toFixed(1)} m³)
+										</span>
+									</p>
+								) : (
+									<p className="text-gray-700 text-base mb-1">Vesi: 0 m³</p>
+								)}
 
 								{addedItems
 									.filter((item) => item.active === true)
@@ -247,18 +284,11 @@ function Create() {
 											</p>
 										)
 									)}
-
-								<button
-									type="button"
-									className=" inline-block px-6 py-2.5 bg-blue-600 text-white font-medium text-xs leading-tight uppercase rounded shadow-md hover:bg-blue-700 hover:shadow-lg focus:bg-blue-700 focus:shadow-lg focus:outline-none focus:ring-0 active:bg-blue-800 active:shadow-lg transition duration-150 ease-in-out"
-								>
-									Button
-								</button>
 							</div>
 						))}
 					</div>
 					<div className="flex flex-row gap-3 p-3 justify-center">
-						<button type="button" className="button mb-2 w-1/4">
+						<button onClick={save} type="button" className="button mb-2 w-1/4">
 							Salvesta
 						</button>
 						<button type="button" className="button mb-2 w-1/4">

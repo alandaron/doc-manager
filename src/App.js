@@ -7,6 +7,7 @@ import Dashboard from "./pages/Dashboard";
 import Flats from "./pages/Flats";
 import Home from "./pages/Home";
 import Login from "./pages/Login";
+import Settings from "./pages/Settings";
 import AuthContext from "./store/AuthContext";
 
 function App() {
@@ -44,6 +45,7 @@ function App() {
 							<Route path="dashboard" element={<Dashboard />} />
 							<Route path="dashboard/create" element={<Create />} />
 							<Route path="dashboard/flats" element={<Flats />} />
+							<Route path="dashboard/settings" element={<Settings />} />
 							<Route path="login" element={<Navigate to="/dashboard" />} />
 						</>
 					)}

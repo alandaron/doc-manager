@@ -13,7 +13,12 @@ function Navbar() {
 		{
 			name: "Home",
 			to: "/",
-			hide: false,
+			hide: authContext.loggedIn,
+		},
+		{
+			name: "Dashboard",
+			to: "/dashboard",
+			hide: !authContext.loggedIn,
 		},
 		{
 			name: "About",

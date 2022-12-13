@@ -30,20 +30,20 @@ export const AuthContextProvider = (props) => {
 	}, [isLoggedIn]);
 
 	const loginHandler = (idToken, user) => {
-		setIsLoggedIn(true);
-		setUser(user);
-
 		const userLS = {
 			uid: user.reloadUserInfo?.localId || user.localId,
 			token: idToken,
 		};
 		sessionStorage.setItem("user", JSON.stringify(userLS));
+
+		setIsLoggedIn(true);
+		setUser(user);
 	};
 
 	const logoutHandler = () => {
+		sessionStorage.removeItem("user");
 		setIsLoggedIn(false);
 		setUser({});
-		sessionStorage.removeItem("user");
 	};
 
 	return (

@@ -1,6 +1,7 @@
 const apiUrl =
 	"https://doc-manager-aron-default-rtdb.europe-west1.firebasedatabase.app/";
 
+// Seda ei saa kasutada, sest api faili ei laadi uuesti kui välja ja sisse logida, vaid peab tervet lehte refreshima.
 // const user = JSON.parse(sessionStorage.getItem("user")) || [];
 
 const headersData = {

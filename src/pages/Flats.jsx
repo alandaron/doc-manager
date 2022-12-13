@@ -40,7 +40,7 @@ function Flats() {
 
 	const changeLastWater = (id, newLastWater) => {
 		const index = flats.findIndex((e) => e.id === id);
-		flats[index].lastWater = Number(newLastWater);
+		flats[index].lastWater = Number(newLastWater) || "";
 		setFlats([...flats]);
 	};
 
@@ -131,7 +131,7 @@ function Flats() {
 						<br />
 						<label className="text-gray-700 text-base">Viimane näit:</label>
 						<input
-							type="email"
+							type="number"
 							className="text-gray-700 text-base ml-1 mb-2"
 							value={flat.lastWater}
 							placeholder="0000"

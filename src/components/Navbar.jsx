@@ -80,6 +80,11 @@ function Navbar() {
 		}
 	};
 
+	const signOut = () => {
+		authContext.logout();
+		window.location.href = "/login";
+	};
+
 	return (
 		<>
 			<nav className="bg-white border-gray-200 px-2 sm:px-4 py-2.5 md:rounded dark:bg-gray-900 mb-5">
@@ -140,7 +145,7 @@ function Navbar() {
 										<li>
 											<Link
 												className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white"
-												onClick={() => authContext.logout()}
+												onClick={signOut}
 											>
 												Sign out
 											</Link>

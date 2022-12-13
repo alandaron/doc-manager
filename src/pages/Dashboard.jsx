@@ -5,6 +5,7 @@ import api from "../config/api";
 function Dashboard() {
 	const [dbMonths, setDbMonths] = useState([]);
 	const [months, setMonths] = useState([]);
+	const [selectedYear, setSelectedYear] = useState("all");
 	const years = [...new Set(dbMonths.map((month) => month.year))];
 
 	useEffect(() => {
@@ -15,16 +16,16 @@ function Dashboard() {
 		});
 	}, []);
 
-	const filterByYear = (yearSelected) => {
-		if (yearSelected === "all") {
+	useEffect(() => {
+		if (selectedYear === "all") {
 			return setMonths(dbMonths);
 		}
 
 		const result = dbMonths.filter(
-			(month) => month.year === Number(yearSelected)
+			(month) => month.year === Number(selectedYear)
 		);
 		setMonths(result);
-	};
+	}, [selectedYear, dbMonths]);
 
 	const getMonth = (month) => {
 		const date = new Date();
@@ -32,11 +33,27 @@ function Dashboard() {
 		return date.toLocaleString("et-EE", { month: "long" });
 	};
 
+	const removeMonth = (month) => {
+		const user = JSON.parse(sessionStorage.getItem("user")) || [];
+		const index = dbMonths.findIndex(
+			(element) => month.month === element.month
+		);
+		const updatedProducts = [...dbMonths];
+		updatedProducts.splice(index, 1);
+
+		api.put("months", updatedProducts, user).then((res) => {
+			dbMonths.splice(index, 1);
+			setDbMonths([...dbMonths]);
+		});
+	};
+
 	return (
 		<div>
 			<p>Dashboard</p>
 			<select
-				onChange={(e) => filterByYear(e.target.value)}
+				onChange={(e) => {
+					setSelectedYear(e.target.value);
+				}}
 				className="text-black px-7 py-3 text-sm leading-snug inline-block rounded"
 			>
 				<option value="all">Kõik</option>
@@ -89,7 +106,12 @@ function Dashboard() {
 													<Link to="edit/1" className="px-5">
 														Vaata / Muuda
 													</Link>
-													<Link className="px-5 text-red-600">Kustuta</Link>
+													<Link
+														onClick={() => removeMonth(element)}
+														className="px-5 text-red-600"
+													>
+														Kustuta
+													</Link>
 												</td>
 											</tr>
 										))}

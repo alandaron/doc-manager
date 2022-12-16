@@ -49,7 +49,6 @@ function Dashboard() {
 
 	return (
 		<div>
-			<p>Dashboard</p>
 			<select
 				onChange={(e) => {
 					setSelectedYear(e.target.value);

@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { toast, ToastContainer } from "react-toastify";
 import api from "../config/api";
 
 function Settings() {
@@ -22,9 +23,14 @@ function Settings() {
 			items: addedItems,
 		};
 
-		api
-			.put("settings", settings, user)
-			.then((res) => setAddedItems([...settings.items]));
+		api.put("settings", settings, user).then((res) => {
+			setAddedItems([...settings.items]);
+			toast.success("Sätted salvestatud!", {
+				position: "bottom-right",
+				autoClose: 5000,
+				theme: "dark",
+			});
+		});
 	};
 
 	const addItem = () => {
@@ -71,6 +77,7 @@ function Settings() {
 
 	return (
 		<div>
+			<ToastContainer />
 			<div className="flex w-full">
 				<div className="flex-1 border rounded-lg px-2 mx-2">
 					<div className="text-xl p-2 text-center">Vesi</div>

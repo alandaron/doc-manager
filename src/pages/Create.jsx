@@ -1,5 +1,6 @@
 import emailjs from "@emailjs/browser";
 import { useEffect, useState } from "react";
+import { toast, ToastContainer } from "react-toastify";
 import Services from "../components/Services";
 import Summary from "../components/Summary";
 import WaterReading from "../components/WaterReading";
@@ -90,14 +91,20 @@ function Create() {
 			flats: flats,
 			items: addedItems,
 			year: new Date().getFullYear(),
-			// year: 2020,
+			//year: 2022,
 			month: new Date().getMonth(),
-			// month: 3,
+			//month: 0,
 		};
 
 		months.push(month);
 
-		api.put("months", months, user).then((res) => console.log("OK!"));
+		api.put("months", months, user).then((res) =>
+			toast.success("Salvestamine õnnestus!", {
+				position: "bottom-right",
+				autoClose: 5000,
+				theme: "dark",
+			})
+		);
 	};
 
 	const getPaymentLink = (amount) => {
@@ -108,7 +115,7 @@ function Create() {
 			order_reference: new Date().getMonth() + Math.random() * 9999,
 			nonce: "a9b7f7e" + Math.random() * 9999 + new Date(),
 			timestamp: new Date(),
-			customer_url: "http://react-aron-db.web.app/cart",
+			customer_url: "http://aron-invoice-manager.web.app/cart",
 		};
 
 		const headersData = {
@@ -189,11 +196,17 @@ function Create() {
 		});
 		Promise.all(promises).then((res) => {
 			console.log(res);
+			toast.success("E-postid on edukalt saadetud!", {
+				position: "bottom-right",
+				autoClose: 5000,
+				theme: "dark",
+			});
 		});
 	};
 
 	return (
 		<div>
+			<ToastContainer />
 			<div className="flex w-full">
 				<div className="flex-1 border rounded-lg px-2 mx-2">
 					<div className="text-xl p-2 text-center">Korterite veenäidud</div>

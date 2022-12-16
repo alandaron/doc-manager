@@ -94,7 +94,7 @@ function Login() {
 									</svg>
 								</div>
 								<div>
-									<p className="font-bold">Login info</p>
+									<p className="font-bold">Sisselogimise info</p>
 									<p className="text-sm">demo@user.ee</p>
 									<p className="text-sm">pass123</p>
 								</div>
@@ -106,7 +106,9 @@ function Login() {
 									className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative"
 									role="alert"
 								>
-									<strong className="font-bold">Authentication failed!</strong>
+									<strong className="font-bold">
+										Autentimine ebaõnnestus!
+									</strong>
 									<span className="block sm:inline"> {message}</span>
 									<span className="absolute top-0 bottom-0 right-0 px-4 py-3">
 										<svg
@@ -130,13 +132,13 @@ function Login() {
 									className="form-check-label inline-block text-gray-800 dark:text-white"
 									htmlFor="rememberMeCheck"
 								>
-									Email
+									E-post
 								</label>
 								<input
 									type="text"
 									ref={emailRef}
 									className="form-control block w-full px-4 py-2 text-md font-normal text-gray-700 bg-white bg-clip-padding border border-solid border-gray-300 rounded transition ease-in-out m-0 focus:text-gray-700 focus:bg-white focus:border-blue-600 focus:outline-none"
-									placeholder="Your email"
+									placeholder="Sinu e-post"
 								/>
 							</div>
 
@@ -145,13 +147,13 @@ function Login() {
 									className="form-check-label inline-block text-gray-800 dark:text-white"
 									htmlFor="rememberMeCheck"
 								>
-									Password
+									Salasõna
 								</label>
 								<input
 									type="password"
 									ref={passwordRef}
 									className="form-control block w-full px-4 py-2 mb-1 text-md font-normal text-gray-700 bg-white bg-clip-padding border border-solid border-gray-300 rounded transition ease-in-out m-0 focus:text-gray-700 focus:bg-white focus:border-blue-600 focus:outline-none"
-									placeholder="Your password"
+									placeholder="Sinu salasõna"
 								/>
 							</div>
 
@@ -166,21 +168,21 @@ function Login() {
 										className="form-check-label inline-block text-gray-800 dark:text-white"
 										htmlFor="rememberMeCheck"
 									>
-										Remember me
+										Pea mind meeles
 									</label>
 								</div>
 								<Link
 									to="/forgot-password"
 									className="text-blue-600 hover:text-blue-700 focus:text-blue-700 active:text-blue-800 duration-200 transition ease-in-out"
 								>
-									Forgot password?
+									Unustasid salasõna?
 								</Link>
 							</div>
 
-							<button className="button w-full">Sign in</button>
+							<button className="button w-full">Logi sisse</button>
 						</form>
 						<div className="flex items-center my-4 before:flex-1 before:border-t before:border-gray-300 before:mt-0.5 after:flex-1 after:border-t after:border-gray-300 after:mt-0.5">
-							<p className="text-center font-semibold mx-4 mb-0">OR</p>
+							<p className="text-center font-semibold mx-4 mb-0">VÕI</p>
 						</div>
 
 						<button
@@ -197,7 +199,7 @@ function Login() {
 									d="M279.14 288l14.22-92.66h-88.91v-60.13c0-25.35 12.42-50.06 52.24-50.06h40.42V6.26S260.43 0 225.36 0c-73.22 0-121.08 44.38-121.08 124.72v70.62H22.89V288h81.39v224h100.17V288z"
 								/>
 							</svg>
-							Continue with Facebook
+							Logi sisse Facebook'iga
 						</button>
 						<button
 							onClick={continueWithGoogle}
@@ -219,7 +221,7 @@ function Login() {
 									<path fill="#4285F4" d="M48 48L17 24l-4-3 35-10z" />
 								</g>
 							</svg>
-							Continue with Google
+							Logi sisse Google'iga
 						</button>
 					</div>
 				</div>

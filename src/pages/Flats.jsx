@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { toast, ToastContainer } from "react-toastify";
 import api from "../config/api.json";
 
 function Flats() {
@@ -64,7 +65,14 @@ function Flats() {
 			method: "PUT",
 			body: JSON.stringify(flats),
 			headers: fetchHeaders,
-		}).then((res) => setFlats([...flats]));
+		}).then((res) => {
+			setFlats([...flats]);
+			toast.success("Uus korter lisatud!", {
+				position: "bottom-right",
+				autoClose: 5000,
+				theme: "dark",
+			});
+		});
 	};
 
 	const deleteFlat = (flat) => {
@@ -79,6 +87,11 @@ function Flats() {
 			body: JSON.stringify(updatedFlats),
 		}).then(() => {
 			setFlats([...updatedFlats]);
+			toast.success("Korter eemaldatud!", {
+				position: "bottom-right",
+				autoClose: 5000,
+				theme: "dark",
+			});
 		});
 	};
 
@@ -90,12 +103,17 @@ function Flats() {
 			body: JSON.stringify(flats),
 		}).then(() => {
 			setFlats([...flats]);
+			toast.success("Korter salvestatud!", {
+				position: "bottom-right",
+				autoClose: 5000,
+				theme: "dark",
+			});
 		});
 	};
 
 	return (
 		<div>
-			<p>Korterid</p>
+			<ToastContainer />
 
 			<div className="grid grid-cols-4 gap-3 p-3">
 				{flats.map((flat) => (
